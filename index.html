@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fifth Amendment Scenario Quiz</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body { font-family: Arial, sans-serif; background:#f4f4f4; margin:0; padding:20px; }
+h1 { text-align:center; }
+.quiz { max-width:950px; margin:auto; }
+.q { background:#fff; padding:16px; margin-bottom:14px; border-radius:8px; }
+.answers label { display:block; margin:6px 0; cursor:pointer; }
+button { margin-top:8px; padding:6px 12px; }
+.correct { color:green; font-weight:bold; }
+.incorrect { color:red; font-weight:bold; }
+.explain { margin-top:6px; font-size:0.9em; }
+</style>
+</head>
+
+<body>
+<h1>Fifth Amendment – Scenario-Based Quiz</h1>
+<div class="quiz" id="quiz"></div>
+
+<script>
+const quizData = [
+
+{
+q:`Officers arrest Marcus for burglary and transport him to the station. While booking Marcus, an officer says, “This is a lot easier when people explain themselves.” Marcus responds, “I just needed the money.” No Miranda warnings were given. At trial, the statement is:`,
+a:[
+"Admissible because it was voluntary",
+"Admissible because booking questions do not require Miranda",
+"Inadmissible because it was the functional equivalent of interrogation",
+"Inadmissible because Marcus had already been arrested"
+],
+c:2,
+e:"Statements made in response to police comments reasonably likely to elicit an incriminating response constitute interrogation under Miranda."
+},
+
+{
+q:`Detectives visit Elena at her home regarding a fraud investigation. They tell her she is not under arrest and is free to ask them to leave. During a 30-minute interview at her kitchen table, Elena admits falsifying records. No Miranda warnings were given. The statement is:`,
+a:[
+"Inadmissible because she was a suspect",
+"Inadmissible because the interview was lengthy",
+"Admissible because Elena was not in custody",
+"Admissible only if she signed a waiver"
+],
+c:2,
+e:"Miranda applies only to custodial interrogation. A reasonable person would feel free to terminate the encounter."
+},
+
+{
+q:`After being arrested for robbery, Kevin states, “I don’t want to talk about this.” Officers immediately stop questioning. Two hours later, a different officer asks Kevin about an unrelated theft without re-Mirandizing him. Kevin confesses. The confession is:`,
+a:[
+"Admissible because it involved a different crime",
+"Inadmissible because Kevin invoked his right to remain silent",
+"Admissible because time passed",
+"Admissible because a new officer questioned him"
+],
+c:1,
+e:"Once a suspect invokes the right to remain silent, police must scrupulously honor that invocation."
+},
+
+{
+q:`Police arrest Sarah for drug trafficking. After receiving Miranda warnings, Sarah says, “Maybe I should talk to a lawyer.” Officers continue questioning, and Sarah confesses. The confession is:`,
+a:[
+"Admissible because Sarah did not clearly request a lawyer",
+"Inadmissible because officers must clarify her intent",
+"Inadmissible because any reference to a lawyer requires questioning to stop",
+"Admissible because the confession was voluntary"
+],
+c:0,
+e:"A suspect must unambiguously invoke the right to counsel. Ambiguous statements do not require police to stop."
+},
+
+{
+q:`During a custodial interrogation, officers tell Jamal that if he does not confess, his girlfriend will be arrested and his children placed in foster care. Jamal confesses. His confession is:`,
+a:[
+"Admissible because police may use psychological pressure",
+"Inadmissible because the confession was coerced",
+"Admissible because the threat was lawful",
+"Admissible because Jamal waived his rights"
+],
+c:1,
+e:"Threats involving family members can overbear a suspect’s will and render a statement involuntary."
+},
+
+{
+q:`After invoking his Miranda rights, Leo is placed in a holding cell. Another inmate, who is secretly an undercover officer, listens as Leo confesses to the crime. At trial, the confession is:`,
+a:[
+"Inadmissible due to Miranda violation",
+"Inadmissible due to Fifth Amendment coercion",
+"Admissible because statements to undercover agents are not interrogation",
+"Inadmissible due to Sixth Amendment violation"
+],
+c:2,
+e:"Miranda does not apply to statements made voluntarily to undercover officers."
+},
+
+{
+q:`Officers arrest Tina and read her Miranda warnings. When asked if she understands her rights, Tina says nothing but begins explaining her involvement in the crime. Her statements are:`,
+a:[
+"Inadmissible without an express verbal waiver",
+"Admissible because Tina impliedly waived her rights",
+"Inadmissible due to silence",
+"Admissible only if recorded"
+],
+c:1,
+e:"A suspect may impliedly waive Miranda rights through voluntary speech after warnings."
+},
+
+{
+q:`Federal agents subpoena Ryan to testify before a grand jury. Ryan invokes the Fifth Amendment. The government obtains a court order granting use immunity and compels testimony. Which is true?`,
+a:[
+"Ryan cannot be prosecuted for any crimes discussed",
+"The testimony may not be used directly or indirectly against Ryan",
+"The immunity only applies to state prosecutions",
+"Ryan may still refuse to testify"
+],
+c:1,
+e:"Use immunity prohibits the government from using compelled testimony or its fruits against the witness."
+},
+
+{
+q:`Police arrest Nina and question her without Miranda warnings. Nina remains silent throughout the interrogation. At trial, prosecutors comment on her silence as evidence of guilt. This is:`,
+a:[
+"Permissible because no Miranda warnings were given",
+"Permissible impeachment evidence",
+"Impermissible under the Fifth Amendment",
+"Permissible if silence occurred post-arrest"
+],
+c:2,
+e:"The Fifth Amendment prohibits the government from using a defendant’s silence against them."
+},
+
+{
+q:`Officers arrest Paul and read him Miranda warnings. Paul says, “I know my rights, let’s get this over with.” He then answers questions for 45 minutes. His waiver is:`,
+a:[
+"Invalid because it was not written",
+"Invalid because it was not explicit",
+"Valid because it was knowing, voluntary, and intelligent",
+"Invalid because the questioning was lengthy"
+],
+c:2,
+e:"Miranda waivers do not need to be written or explicit if the totality shows knowing, voluntary, and intelligent waiver."
+}
+
+];
+
+const quiz = document.getElementById("quiz");
+
+quizData.forEach((q,i)=>{
+const div=document.createElement("div");
+div.className="q";
+div.innerHTML=`<b>Q${i+1}. ${q.q}</b><div class="answers"></div>
+<button onclick="check(${i})">Check</button>
+<div id="r${i}"></div>`;
+quiz.appendChild(div);
+
+q.a.forEach((ans,j)=>{
+div.querySelector(".answers").innerHTML+=
+`<label><input type="radio" name="q${i}" value="${j}"> ${ans}</label>`;
+});
+});
+
+function check(i){
+const sel=document.querySelector(\`input[name="q${i}"]:checked\`);
+const res=document.getElementById("r"+i);
+if(!sel){res.innerHTML="<span class='incorrect'>Select an answer</span>";return;}
+if(parseInt(sel.value)===quizData[i].c){
+res.innerHTML="<span class='correct'>Correct</span><div class='explain'>"+quizData[i].e+"</div>";
+}else{
+res.innerHTML="<span class='incorrect'>Incorrect</span><div class='explain'>"+quizData[i].e+"</div>";
+}
+}
+</script>
+</body>
+</html>
